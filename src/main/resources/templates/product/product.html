@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Список товаров</title>
+</head>
+<body>
+<h3>Список доступных товаров</h3>
+<form th:action="@{/product/search}" method="post">
+    <fieldset>
+        <legend>Параметры поиска, сортировки и фильтрации</legend>
+        <br>
+        <div>
+            <label for="search">Поиск по наименованию: </label>
+            <input type="text" id="search" name="search" th:value="*{value_search}">
+        </div>
+        <hr>
+        <div>
+            <p>Цена, руб.</p>
+            <label for="ot">от: </label>
+            <input type="text" id="ot" name="ot" th:value="*{value_ot}">
+            <label for="do">до: </label>
+            <input type="text" id="do" name="do" th:value="*{value_do}">
+            <br>
+            <label for="asc_price">По возрастанию цены</label>
+            <input type="radio" name="price" id="asc_price" value="sorted_by_asc_price" checked>
+            <label for="desc_price">По убыванию цены</label>
+            <input type="radio" name="price" id="desc_price" value="sorted_by_desc_price">
+        </div>
+        <hr>
+        <div>
+            <p>Категория товаров: </p>
+            <label for="furniture">Мебель</label>
+            <input type="radio" name="category" id="furniture" value="furniture" checked>
+            <label for="appliance">Бытовая техника</label>
+            <input type="radio" name="category" id="appliance" value="appliance">
+            <label for="clothes">Одежда</label>
+            <input type="radio" name="category" id="clothes" value="clothes">
+        </div>
+        <br>
+        <button type="submit">Отобрать</button>
+    </fieldset>
+</form>
+<hr>
+<h3>Результат отбора</h3>
+<div th:each="product : ${search_product}">
+    <img th:src="'/img/' + ${product.imagesList[0].getFileName()}" alt="" width="300px">
+    <br>
+    <a th:href="@{/product/info/{id}(id=${product.getId()})}" th:text="${product.getTitle()}"></a>
+    <p th:text="'Цена: ' + ${product.getPrice()}" style="font-weight: bold"></p>
+    <hr>
+</div>
+<hr>
+<h3>Доступные товары</h3>
+<div th:each="product : ${products}">
+    <img th:src="'/img/' + ${product.imagesList[0].getFileName()}" alt="" width="300px">
+    <br>
+    <a th:href="@{/product/info/{id}(id=${product.getId()})}" th:text="${product.getTitle()}"></a>
+    <p th:text="'Цена: ' + ${product.getPrice()}" style="font-weight: bold"></p>
+    <hr>
+</div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Заказы</title>
+</head>
+<body>
+<h3>Заказы</h3>
+<form th:action="@{/person_account}" method="get">
+    <button type="submit">В личный кабинет</button>
+</form>
+<br>
+<h4 th:text="'Общая сумма: ' + ${#numbers.formatDecimal(total, 1, 2)}" style="font-weight: bold; font-style: italic; color: crimson"></h4>
+<div th:each="order : ${orders}">
+    <h3 th:text="'Заказ №' + ${order.getNumber()} + ' от ' + ${#temporals.format(order.getDateTime(), 'dd MMMM yyyy')} " style="font-weight: bold"></h3>
+    <a th:href="@{/product/info/{id}(id=${order.getProduct().getId()})}"><img th:src="'/img/' + ${order.getProduct().imagesList[0].getFileName()}" alt="" width="300px"></a>
+    <br>
+    <p th:text="'Наименование: ' + ${order.getProduct().getTitle()}" style="font-weight: bold"></p>
+    <p th:text="'Количество: ' + ${order.getCount()}"></p>
+    <p th:text="'Цена: ' + ${order.getPrice()}"></p>
+    <p th:text="'Статус: ' + ${order.getStatus()}"></p>
+    <br>
+    <a th:href="@{/delete/orders/{order_id}/{product_id}(order_id=${order.getId()}, product_id=${order.getProduct().getId()})}">Удалить товар из заказа</a>
+    <hr>
+</div>
+
+</body>
+</html>

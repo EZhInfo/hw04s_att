@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Заказы</title>
+</head>
+<body>
+<h3>Управление заказами</h3>
+<a th:href="@{/admin}">Личный кабинет</a>
+<form th:action="@{/admin/orders/search}" method="post">
+    <fieldset>
+        <legend>Отбор и сортировка</legend>
+        <div>
+            <label for="search">Поиск по 4 символам номера заказа: </label>
+            <input type="text" id="search" name="search" th:value="*{value_search}">
+        </div>
+        <button type="submit">Применить</button>
+    </fieldset>
+</form>
+
+<div th:each="order : ${orders}">
+    <h3 th:text="'Заказ №' + ${order.getNumber()} + ' от ' + ${#temporals.format(order.getDateTime(), 'dd MMMM yyyy')} "
+        style="font-weight: bold"></h3>
+    <p th:text="'Наименование: ' + ${order.getProduct().getTitle()}" style="font-weight: bold"></p>
+    <p th:text="'Количество: ' + ${order.getCount()}"></p>
+    <p th:text="'Цена: ' + ${order.getPrice()}"></p>
+    <p th:text="'Статус: ' + ${order.getStatus()}"></p>
+    <br>
+    <a th:href="@{/admin/orders/edit/{id}(id=${order.getId()})}">Изменить статус заказа</a>
+    <a th:href="@{/admin/delete/orders/{id}(id=${order.getId()})}">Удалить заказ</a>
+    <hr>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Редактирование товара</title>
+</head>
+<body>
+<a th:href="@{/admin}">Личный кабинет</a>
+<h3>Редактирование товара</h3>
+<form th:action="@{/admin/product/edit/{id}(id=${product.getId()})}" method="post" th:object="${product}" enctype="multipart/form-data">
+  <div>
+    <label for="title">Наименование: </label>
+    <input type="text" name="title" th:field="*{title}" id="title" placeholder="Введите наименование товара">
+    <div style="color: red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+  </div>
+  <div>
+    <label for="description">Описание: </label>
+    <textarea name="description" th:field="*{description}" id="description"
+              placeholder="Введите описание товара"></textarea>
+    <div style="color: red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+  </div>
+  <div>
+    <label for="price">Цена: </label>
+    <input type="number" name="price" th:field="*{price}" id="price" min="1" step="0.01">
+    <div style="color: red" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+  </div>
+  <div>
+    <label for="warehouse">Склад: </label>
+    <input type="text" name="warehouse" th:field="*{warehouse}" id="warehouse" placeholder="Введите склад товара">
+    <div style="color: red" th:if="${#fields.hasErrors('warehouse')}" th:errors="*{warehouse}"></div>
+  </div>
+  <div>
+    <label for="category">Категория: </label>
+    <select name="category" th:field="*{category}" id="category">
+      <div th:each="element : ${category}">
+        <option th:text="${element.getName()}" th:value="${element.getId()}"></option>
+      </div>
+    </select>
+    <div style="color: red" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
+  </div>
+  <div>
+    <label for="seller">Продавец: </label>
+    <textarea name="seller" th:field="*{seller}" id="seller" placeholder="Введите поставщика товара"></textarea>
+    <div style="color: red" th:if="${#fields.hasErrors('seller')}" th:errors="*{seller}"></div>
+  </div>
+<!--  <div>-->
+<!--    <p style="color: blue">Можно загрузить до 5 фотографий. Первая фотография является основной для товара и не может быть пустой</p>-->
+<!--    <label for="file01">Фото 1 </label>-->
+<!--    <input type="file" name="file01" id="file01">-->
+<!--    <br>-->
+<!--    <label for="file02">Фото 2 </label>-->
+<!--    <input type="file" name="file02" id="file02">-->
+<!--    <br>-->
+<!--    <label for="file03">Фото 3 </label>-->
+<!--    <input type="file" name="file03" id="file03">-->
+<!--    <br>-->
+<!--    <label for="file04">Фото 4 </label>-->
+<!--    <input type="file" name="file04" id="file04">-->
+<!--    <br>-->
+<!--    <label for="file05">Фото 5 </label>-->
+<!--    <input type="file" name="file05" id="file05">-->
+<!--  </div>-->
+  <br>
+  <button type="submit">Редактировать товар</button>
+</form>
+</body>
+</html>
