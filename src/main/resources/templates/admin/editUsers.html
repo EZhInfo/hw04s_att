@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Редактирование пользователя</title>
+</head>
+<body>
+<a th:href="@{/admin}">Личный кабинет</a>
+<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+<h3>Редактирование пользователя</h3>
+<form th:action="@{/admin/users/edit/{id}(id=${users.getId()})}" method="post" th:object="${users}">
+  <div>
+  <h3 th:text="'ID: ' + ${users.getId()}"></h3>
+<!--  <p th:text="'Логин: ' + ${users.getLogin()}"></p>-->
+    <div>
+      <label for="login">Логин: </label>
+      <input type="text" name="login" th:field="*{login}" id="login" placeholder="Введите новый логин">
+      <div style="color: red" th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></div>
+    </div>
+
+<!--    <p th:text="'Пароль: ' + ${users.getPassword()}"></p>-->
+    <div>
+      <label for="password">Пароль: </label>
+      <input type="text" name="password" th:field="*{password}" id="password" placeholder="Введите новый пароль">
+      <div style="color: red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+    </div>
+
+    <label for="role">Роль: </label>
+    <select name="role" th:field="*{role}" id="role">
+      <div th:each="element : ${role}">
+        <option th:text="${element.name()}" th:value="${element.name()}"></option>
+      </div>
+    </select>
+    <div style="color: red" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></div>
+  </div>
+  <br>
+  <button type="submit">Изменить</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Товары</title>
+</head>
+<body>
+<h3>Управление товарами</h3>
+<a th:href="@{/admin}">Личный кабинет</a>
+<a th:href="@{/admin/product/add}">Добавить товар</a>
+<br>
+<hr>
+<div th:each="product : ${products}">
+    <p th:text="'Товар №' + ${product.getId()}"></p>
+    <p th:text="'Наименование: ' + ${product.getTitle()}"></p>
+    <p th:text="'Описание: ' + ${product.getDescription()}"></p>
+    <p th:text="'Категория: ' + ${product.getCategory().getName()}"></p>
+    <p th:text="'Цена: ' + ${product.getPrice()}"></p>
+    <p th:text="'Склад: ' + ${product.getWarehouse()}"></p>
+    <p th:text="'Поставщик: ' + ${product.getSeller()}"></p>
+
+    <a th:href="@{/admin/product/edit/{id}(id=${product.getId()})}">Редактировать товар</a>
+    <a th:href="@{/admin/product/delete/{id}(id=${product.getId()})}">Удалить товар</a>
+    <hr>
+</div>
+</body>
+</html>

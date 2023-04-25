@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Пользователи</title>
+</head>
+<body>
+<h3>Управление пользователями</h3>
+<a th:href="@{/admin}">Личный кабинет</a>
+
+<div th:each="user : ${users}">
+    <p th:text="'ID: ' + ${user.getId()}"></p>
+    <p th:text="'Логин: ' + ${user.getLogin()}"></p>
+    <p th:text="'Пароль: ' + ${user.getPassword()}"></p>
+    <p th:text="'Роль: ' + ${user.getRole()}"></p>
+    <br>
+    <a th:href="@{/admin/users/edit/{id}(id=${user.getId()})}">Изменить роль пользователя</a>
+    <a th:href="@{/admin/users/delete/{id}(id=${user.getId()})}">Удалить пользователя</a>
+    <hr>
+</div>
+
+</body>
+</html>
