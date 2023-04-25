@@ -1,5 +1,6 @@
 package com.example.hw04s_att.controllers;
 
+import com.example.hw04s_att.enumm.Role;
 import com.example.hw04s_att.enumm.Status;
 import com.example.hw04s_att.models.Cart;
 import com.example.hw04s_att.models.Orders;
@@ -49,7 +50,7 @@ public class MainController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
         String role = personDetails.getPerson().getRole();
-        if (role.equals("ROLE_ADMIN")){
+        if (Role.ADMIN.getTypeRole().equals(role)){
             return "redirect:/admin";
         }
         
@@ -57,14 +58,6 @@ public class MainController {
         return "/user/person_account";
     }
     
-    //1 способ
-    //    @GetMapping("/registration")
-    //    public String registration(Model model) {
-    //        model.addAttribute("person", new Person());
-    //        return "registration";
-    //    }
-    //
-    //2 способ
     @GetMapping("/registration")
     public String registration(@ModelAttribute("person") Person person) {
         return "registration";

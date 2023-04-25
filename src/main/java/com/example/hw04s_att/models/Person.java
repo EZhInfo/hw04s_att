@@ -1,5 +1,6 @@
 package com.example.hw04s_att.models;
 
+import com.example.hw04s_att.enumm.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -88,4 +89,5 @@ public class Person {
         result = 31 * result + (password != null ? password.hashCode() : 0);
         return result;
     }
+    
 }

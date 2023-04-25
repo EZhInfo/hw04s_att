@@ -5,7 +5,7 @@
   <title>Редактирование товара</title>
 </head>
 <body>
-<a th:href="@{/admin}">Личный кабинет</a>
+<a th:href="@{/templates/admin}">Личный кабинет</a>
 <h3>Редактирование товара</h3>
 <form th:action="@{/admin/product/edit/{id}(id=${product.getId()})}" method="post" th:object="${product}" enctype="multipart/form-data">
   <div>
@@ -43,25 +43,8 @@
     <textarea name="seller" th:field="*{seller}" id="seller" placeholder="Введите поставщика товара"></textarea>
     <div style="color: red" th:if="${#fields.hasErrors('seller')}" th:errors="*{seller}"></div>
   </div>
-<!--  <div>-->
-<!--    <p style="color: blue">Можно загрузить до 5 фотографий. Первая фотография является основной для товара и не может быть пустой</p>-->
-<!--    <label for="file01">Фото 1 </label>-->
-<!--    <input type="file" name="file01" id="file01">-->
-<!--    <br>-->
-<!--    <label for="file02">Фото 2 </label>-->
-<!--    <input type="file" name="file02" id="file02">-->
-<!--    <br>-->
-<!--    <label for="file03">Фото 3 </label>-->
-<!--    <input type="file" name="file03" id="file03">-->
-<!--    <br>-->
-<!--    <label for="file04">Фото 4 </label>-->
-<!--    <input type="file" name="file04" id="file04">-->
-<!--    <br>-->
-<!--    <label for="file05">Фото 5 </label>-->
-<!--    <input type="file" name="file05" id="file05">-->
-<!--  </div>-->
   <br>
-  <button type="submit">Редактировать товар</button>
+  <button type="submit">Изменить</button>
 </form>
 </body>
 </html>

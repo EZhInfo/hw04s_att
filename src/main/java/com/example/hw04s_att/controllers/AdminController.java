@@ -1,15 +1,14 @@
 package com.example.hw04s_att.controllers;
 
+import com.example.hw04s_att.enumm.Role;
 import com.example.hw04s_att.enumm.Status;
-import com.example.hw04s_att.models.Category;
-import com.example.hw04s_att.models.Image;
-import com.example.hw04s_att.models.Orders;
-import com.example.hw04s_att.models.Product;
+import com.example.hw04s_att.models.*;
 import com.example.hw04s_att.repositories.CategoryRepository;
 import com.example.hw04s_att.security.PersonDetails;
 import com.example.hw04s_att.services.OrderService;
 import com.example.hw04s_att.services.PersonService;
 import com.example.hw04s_att.services.ProductService;
+import com.example.hw04s_att.util.PersonValidator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -32,18 +31,20 @@ public class AdminController {
     
     private final CategoryRepository categoryRepository;
     private final OrderService orderService;
-    
     private final PersonService personService;
+    
+    private final PersonValidator personValidator;
     
     @Value("${loadImg.path}")
     private String loadImgPath;
     
     private final ProductService productService;
     
-    public AdminController(CategoryRepository categoryRepository, OrderService orderService, PersonService personService, ProductService productService) {
+    public AdminController(CategoryRepository categoryRepository, OrderService orderService, PersonService personService, PersonValidator personValidator, ProductService productService) {
         this.categoryRepository = categoryRepository;
         this.orderService = orderService;
         this.personService = personService;
+        this.personValidator = personValidator;
         this.productService = productService;
     }
     
@@ -57,7 +58,7 @@ public class AdminController {
     public String addProduct(Model model) {
         model.addAttribute("product", new Product());
         model.addAttribute("category", categoryRepository.findAll());
-        return "product/addProduct";
+        return "admin/addProduct";
     }
     
     @PostMapping("/admin/product/add")
@@ -67,7 +68,7 @@ public class AdminController {
         
         if (bindingResult.hasErrors()) {
             model.addAttribute("category", categoryRepository.findAll());
-            return "product/addProduct";
+            return "admin/addProduct";
         }
         
         if (file01 != null) {
@@ -157,13 +158,14 @@ public class AdminController {
     public String editProduct(Model model, @PathVariable("id") int id) {
         model.addAttribute("product", productService.getProductId(id));
         model.addAttribute("category", categoryRepository.findAll());
-        return "product/editProduct";
+        return "admin/editProduct";
     }
+    
     @PostMapping("/admin/product/edit/{id}")
     public String editProduct(@ModelAttribute("product") @Valid Product product, BindingResult bindingResult, @PathVariable("id") int id, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("category", categoryRepository.findAll());
-            return "product/editProduct";
+            return "admin/editProduct";
         }
         
         productService.updateProduct(id, product);
@@ -214,17 +216,68 @@ public class AdminController {
         
         // меняем только статус, для редактирования полей - переделать форму
         Orders orders_db = orderService.getOrdersId(id);
-//        orders_db.setNumber(orders.getNumber());
-//        orders_db.setProduct(orders.getProduct());
-//        orders_db.setPerson(personDetails.getPerson());
-//        orders_db.setCount(orders.getCount());
-//        orders_db.setPrice(orders.getPrice());
+        //        orders_db.setNumber(orders.getNumber());
+        //        orders_db.setProduct(orders.getProduct());
+        //        orders_db.setPerson(personDetails.getPerson());
+        //        orders_db.setCount(orders.getCount());
+        //        orders_db.setPrice(orders.getPrice());
         orders_db.setStatus(status);
         orders_db.setDateTime(LocalDateTime.now());
         
         orderService.updateOrders(id, orders_db);
         
         return "redirect:/admin/orders";
+    }
+    
+    @GetMapping("/admin/products")
+    public String products(Model model) {
+        model.addAttribute("products", productService.getAllProduct());
+        return "admin/products";
+    }
+    
+    @GetMapping("/admin/users")
+    public String users(Model model) {
+        model.addAttribute("users", personService.getAllUsers());
+        return "admin/users";
+    }
+    
+    @GetMapping("/admin/users/delete/{id}")
+    public String deleteUsers(@PathVariable("id") int id) {
+        personService.deletePerson(id);
+        return "redirect:/admin/users";
+    }
+    
+    @GetMapping("/admin/users/edit/{id}")
+    public String editUsers(Model model, @PathVariable("id") int id) {
+        List<Role> enums = Arrays.asList(Role.values());
+        model.addAttribute("role", enums);
+        model.addAttribute("users", personService.getPersonById(id));
+        return "admin/editUsers";
+    }
+    
+    @PostMapping("/admin/users/edit/{id}")
+    public String editUsers(@ModelAttribute("users") @Valid Person users, @ModelAttribute("role") @Valid Role role, BindingResult bindingResult, @PathVariable("id") int id, Model model) {
+        
+        //сессия пользователя
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+        
+        Person person = personDetails.getPerson();
+        
+        if (bindingResult.hasErrors() || person.getId() == id || !Role.ADMIN.getTypeRole().equals(person.getRole())) {
+            List<Role> enums = Arrays.asList(Role.values());
+            model.addAttribute("role", enums);
+        } else {
+            // меняем логин и роль, шифруем пароль
+            Person person_db = personService.getPersonById(id);
+            person_db.setLogin(users.getLogin());
+            person_db.setPassword(users.getPassword());
+            person_db.setRole(role.getTypeRole());
+            
+            personService.updatePerson(id, person_db);
+        }
+        
+        return "redirect:/admin/users";
     }
     
 }
